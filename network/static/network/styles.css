@@ -23,4 +23,22 @@
   grid-template-columns: auto auto 1fr;
 }
 
+#create-post {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  align-items: center;
+  border: 1px lightgray solid;
+  padding: 20px;
+  margin: 20px 0;
+}
+#create-post #textarea-wrapper {
+  grid-column: 2/span 4;
+}
+#create-post #post-textarea {
+  resize: none;
+}
+#create-post #post-button {
+  margin-left: 20px;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -1,27 +1,49 @@
-.post{
-  border: 1px lightgray solid;
+$border: lightgray;
+
+.post {
+  border: 1px $border solid;
   border-radius: 10px;
   font-family: sans-serif;
   margin: 10px;
   padding: 10px 20px;
 
-  .author{
+  .author {
     text-decoration: none;
-    color:gray;
+    color: gray;
     font-size: small;
   }
-  .title{
+  .title {
     font-size: large;
     font-weight: bold;
   }
-  .date{
+  .date {
     text-align: right;
     font-size: small;
-
   }
-  .footer-wrapper{
-    display:grid;
+  .footer-wrapper {
+    display: grid;
     grid-template-columns: auto auto 1fr;
   }
+}
+#create-post{
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  align-items: center;
 
+  border: 1px $border solid;
+  padding: 20px;
+  margin: 20px 0;
+
+  #textarea-wrapper{
+    grid-column: 2/ span 4;
+  }
+
+  #post-textarea{
+    resize: none;
+  }
+
+  #post-button{
+    margin-left: 20px
+
+  }
 }

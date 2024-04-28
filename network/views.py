@@ -83,6 +83,9 @@ def posts(request):
     return JsonResponse(data, safe=False)
 
 
+def post(request):
+    if request.method == "POST":
+        pass
 
 @login_required(redirect_field_name=None)
 def get_current_user(request):

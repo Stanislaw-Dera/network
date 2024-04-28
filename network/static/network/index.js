@@ -2,6 +2,9 @@ let counter = 0;
 const quantity = 10;
 
 document.addEventListener('DOMContentLoaded', load)
+document.addEventListener('DOMContentLoaded', () => {
+
+})
 
 window.onscroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {

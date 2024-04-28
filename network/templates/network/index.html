@@ -1,6 +1,16 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div id="posts" class="container">
+    <form>
+    <div id="create-post">
+        <div class="empty"></div>
+        <div id="textarea-wrapper">
+            <textarea id="post-textarea" class="form-control" placeholder="What's going on?"></textarea>
+        </div>
+        <input id="post-button" type="image" src="../../static/network/send.svg" alt="submit" height="50px">
+
+    </div>
+    </form>
+    <div id="posts">
     </div>
 {% endblock %}
