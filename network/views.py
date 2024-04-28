@@ -1,4 +1,7 @@
+import time
+
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -65,4 +68,36 @@ def register(request):
 
 
 def posts(request):
-    return JsonResponse([post.serialize() for post in Post.objects.order_by('-date')], safe=False)
+    start = int(request.GET.get("start") or 0)
+    end = int(request.GET.get("end") or (start + 9))
+    data = []
+
+    for i in range(end-start+1):
+        try:
+            data.append(Post.objects.order_by('-date')[i+start].serialize())
+        except IndexError:
+            time.sleep(1)
+            return JsonResponse(data, safe=False)
+
+    time.sleep(1)
+    return JsonResponse(data, safe=False)
+
+
+
+@login_required(redirect_field_name=None)
+def get_current_user(request):
+    return JsonResponse({'current_user_id': request.user.id})
+
+
+@login_required(redirect_field_name=None)
+def like(request, post_id):
+    current_user = request.user
+    post = Post.objects.get(id=post_id)
+
+    if current_user in post.likes.all():
+        post.likes.remove(current_user)
+        return JsonResponse({'message': 'liked'})
+    else:
+        post.likes.add(current_user)
+        return JsonResponse({'message': 'unliked'})
+

@@ -1,0 +1,27 @@
+.post{
+  border: 1px lightgray solid;
+  border-radius: 10px;
+  font-family: sans-serif;
+  margin: 10px;
+  padding: 10px 20px;
+
+  .author{
+    text-decoration: none;
+    color:gray;
+    font-size: small;
+  }
+  .title{
+    font-size: large;
+    font-weight: bold;
+  }
+  .date{
+    text-align: right;
+    font-size: small;
+
+  }
+  .footer-wrapper{
+    display:grid;
+    grid-template-columns: auto auto 1fr;
+  }
+
+}

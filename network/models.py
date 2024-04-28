@@ -19,7 +19,7 @@ class Post(models.Model):
             'author': self.author.username,
             'title': self.title,
             'body': self.body,
-            'date': self.date,
+            'date': self.date.strftime("%a, %d %b %Y %H:%M"),
             'likes': self.likes.count()
         }
 
