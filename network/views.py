@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 
 from .models import User, Post
 
@@ -83,9 +84,23 @@ def posts(request):
     return JsonResponse(data, safe=False)
 
 
+@requires_csrf_token
+@login_required(redirect_field_name=None)
 def post(request):
     if request.method == "POST":
-        pass
+        print('Post data: ', request.POST.get('body'))
+
+        post = Post(
+            body=request.POST.get("body"),
+            author=request.user,
+        )
+        post.save()
+        if post.body == '':
+            return JsonResponse({"error": "post body is empty"}, status=400)
+
+        print(post.serialize())
+        return JsonResponse({"you post!": f'{post.body}'})
+
 
 @login_required(redirect_field_name=None)
 def get_current_user(request):

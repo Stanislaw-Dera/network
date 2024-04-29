@@ -12,10 +12,6 @@ $border: lightgray;
     color: gray;
     font-size: small;
   }
-  .title {
-    font-size: large;
-    font-weight: bold;
-  }
   .date {
     text-align: right;
     font-size: small;
@@ -44,6 +40,13 @@ $border: lightgray;
 
   #post-button{
     margin-left: 20px
+  }
 
+  #post-error-box{
+    grid-column: 2;
+    font-size: x-small;
+    color: darkred;
+    margin-top: 5px;
+    margin-bottom: -10px;
   }
 }

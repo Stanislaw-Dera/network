@@ -10,10 +10,6 @@
   color: gray;
   font-size: small;
 }
-.post .title {
-  font-size: large;
-  font-weight: bold;
-}
 .post .date {
   text-align: right;
   font-size: small;
@@ -39,6 +35,13 @@
 }
 #create-post #post-button {
   margin-left: 20px;
+}
+#create-post #post-error-box {
+  grid-column: 2;
+  font-size: x-small;
+  color: darkred;
+  margin-top: 5px;
+  margin-bottom: -10px;
 }
 
 /*# sourceMappingURL=styles.css.map */

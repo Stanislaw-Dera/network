@@ -8,7 +8,6 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=100)
     body = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
@@ -17,7 +16,6 @@ class Post(models.Model):
     def serialize(self):
         return {
             'author': self.author.username,
-            'title': self.title,
             'body': self.body,
             'date': self.date.strftime("%a, %d %b %Y %H:%M"),
             'likes': self.likes.count()
