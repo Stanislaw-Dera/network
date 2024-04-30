@@ -38,15 +38,31 @@ function load(){
 function add_post(object){
     const post = document.createElement('div')
     post.className = 'post'
+
     post.innerHTML = `
-    <div class="author">By: ${object.author}</div> 
-    <div class="body">${object.body}</div>
-    <div class="footer-wrapper">
-        <img src="../static/network/not_liked.svg" alt="like" height="30" width="30">
-        <div>${object.likes}</div>
-        <div class="date">${object.date}</div>
-    </div>`;
-    document.querySelector('#posts').append(post); //dodać odnośnik do profilu autora
+        <div class="author">By: ${object.author}</div> 
+        <div class="body">${object.body}</div>
+        <div class="footer-wrapper">
+            <img id="post-like-img-${object.id}" src="../static/network/not_liked.svg" alt="like" class="like-image" height="30" width="30">
+            <div>${object.likes}</div>
+            <div class="date">${object.date}</div>
+        </div>
+    `;
+
+    document.querySelector('#posts').append(post)
+
+
+    //check whether post is already liked by this user, handle like img
+    fetch(`posts/${object.id}/like`)
+    .then(response => response.json())
+    .then(isLiked => {
+        const likeIMG = isLiked.liked ? 'liked.svg' : 'not_liked.svg';
+
+        const likeImage = post.querySelector(`#post-like-img-${object.id}`);
+        likeImage.src = `../static/network/${likeIMG}`;
+    })
+
+    // dodać odnośnik do profilu autora, zaradź coś na niezalogowanego użytkownika
 }
 
 function submit_post(event){
