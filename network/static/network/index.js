@@ -12,18 +12,27 @@ window.onscroll = () => {
     }
 };
 
-function load(){
-    const start = counter;
-    const end = counter + quantity - 1;
-    counter = end + 1;
+let loading = false;
 
-    fetch(`/posts?start=${start}&end=${end}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        data.forEach(add_post)
-        // add_post(data[0].title)
-    })
+function load(){
+     if(!loading){
+         loading=true
+        const start = counter;
+        const end = counter + quantity - 1;
+        counter = end + 1;
+
+        fetch(`/posts?start=${start}&end=${end}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                data.forEach(add_post)
+                loading = false;
+            })
+            .catch(error => {
+                console.log(error)
+                loading = false;
+            })
+    }
 }
 
 function add_post(object){
@@ -84,4 +93,8 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
