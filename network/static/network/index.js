@@ -58,9 +58,23 @@ function add_post(object){
     .then(isLiked => {
         const likeIMG = isLiked.liked ? 'liked.svg' : 'not_liked.svg';
 
-        const likeImage = post.querySelector(`#post-like-img-${object.id}`);
-        likeImage.src = `../static/network/${likeIMG}`;
+        const likeImageElement = post.querySelector(`#post-like-img-${object.id}`);
+        likeImageElement.src = `../static/network/${likeIMG}`;
+
+        likeImageElement.addEventListener('click', function() {
+            console.log('you click the like button for post', object.id)
+
+            fetch(`posts/${object.id}/like`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': getCookie('csrftoken')}
+            })
+            .then(response => {response.json()})
+            .then(likedStatus => {
+                console.log(likedStatus)
+            })
+        })
     })
+
 
     // dodać odnośnik do profilu autora, zaradź coś na niezalogowanego użytkownika
 }
