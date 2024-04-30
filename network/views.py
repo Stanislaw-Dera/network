@@ -115,10 +115,10 @@ def like(request, post_id):
     if request.method == "POST":
         if current_user in post.likes.all():
             post.likes.remove(current_user)
-            return JsonResponse({'message': 'liked'})
+            return JsonResponse({'liked': False})
         else:
             post.likes.add(current_user)
-            return JsonResponse({'message': 'unliked'})
+            return JsonResponse({'liked': True})
     elif request.method == "GET":
         if current_user in post.likes.all():
             return JsonResponse({'liked': True})
