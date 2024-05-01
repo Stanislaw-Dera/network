@@ -1,23 +1,86 @@
 let counter = 0;
 const quantity = 10;
 
-document.addEventListener('DOMContentLoaded', load)
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#post-button').addEventListener('click', submit_post)
+
+    document.querySelector('#post-button').addEventListener('click', submitPost)
+    document.querySelector("#user-profile").addEventListener('click', loadUserProfile(2))
+    document.querySelector("#all-posts").addEventListener('click', loadIndex)
+
+    console.log('hash:', window.location.hash)
+
+    // by default, load index page (all posts)
+    loadIndex();
 })
 
-window.onscroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        load();
+function loadIndex(){
+    console.log('loadIndex')
+    counter = 0;
+    document.querySelector('#profile').style.display = 'none'
+    document.querySelector('#create-post').style.display = 'grid'
+    document.querySelector('#posts').style.display = 'block'
+
+    document.querySelector('#posts').innerHTML = ''
+
+    load();
+    // event.preventDefault();
+
+    window.onscroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            load();
+        }
+    };
+}
+
+function loadUserProfile(userID){
+    return function () {
+
+        fetch(`profile/${userID}`)
+            .then(response => response.json())
+            .then(userData => {
+
+                userData = userData.user_data;
+
+                const profileElement = document.querySelector('#profile')
+                console.log(userData)
+                profileElement.innerHTML = `
+                <div id="profile-username">${userData.username}</div>
+                <div id="profile-followers">Followers: ${userData.followers_count}</div>
+                <div id="profile-following">Following: ${userData.following_count}</div>`
+            })
+            .then(() => {
+                console.log('loadUserProfile')
+                counter = 0;
+                document.querySelector('#profile').style.display = 'grid'
+                document.querySelector('#create-post').style.display = 'none'
+                document.querySelector('#posts').style.display = 'block'
+
+                document.querySelector('#posts').innerHTML = ''
+
+
+               loadUserPosts(userID)()
+                
+                window.onscroll = () => {
+                    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                        loadUserPosts(userID);
+                    }
+                };
+            })
+            .catch(error => {
+                console.log(error)
+                loadIndex()
+            })
+
+
     }
-};
+}
 
 let loading = false;
-const addedListeners = new Set();
 
 function load(){
      if(!loading){
-         loading=true
+
+        loading=true
         const start = counter;
         const end = counter + quantity - 1;
         counter = end + 1;
@@ -26,7 +89,7 @@ function load(){
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                data.forEach(add_post)
+                data.forEach(addPost)
                 loading = false;
             })
             .catch(error => {
@@ -36,12 +99,36 @@ function load(){
     }
 }
 
-function add_post(object){
+function loadUserPosts(userID){
+    return function (){
+        if(!loading){
+
+            loading=true
+            const start = counter;
+            const end = counter + quantity - 1;
+            counter = end + 1;
+
+            fetch(`/profile/${userID}/posts?start=${start}&end=${end}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    data.forEach(addPost)
+                    loading = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    loading = false;
+                })
+        }
+    }
+}
+
+function addPost(object){
     const post = document.createElement('div')
     post.className = 'post'
 
     post.innerHTML = `
-        <div class="author">By: ${object.author}</div> 
+        <div class="author" onclick="loadUserProfile(${object.author_id})()">By: ${object.author}</div> 
         <div class="body">${object.body}</div>
         <div class="footer-wrapper">
             <img id="post-like-img-${object.id}" src="../static/network/not_liked.svg" alt="like" class="like-image" height="30" width="30">
@@ -58,7 +145,7 @@ function add_post(object){
     // dodać odnośnik do profilu autora, zaradź coś na niezalogowanego użytkownika
 }
 
-function submit_post(event){
+function submitPost(event){
     const postBody = document.querySelector('#post-textarea').value
 
     if (postBody !== ''){
@@ -108,8 +195,21 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let fun1counter = 0;
-let fun2counter = 0;
+//auto-resize textarea (https://stackoverflow.com/questions/454202/creating-a-textarea-with-auto-resize)
+document.addEventListener('DOMContentLoaded', () =>{
+    const tx = document.getElementsByTagName("textarea");
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+      tx[i].addEventListener("input", OnInput, false);
+    }
+})
+
+function OnInput() {
+    this.style.resize = 'vertical';
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + "px";
+    this.style.resize = 'none';
+}
 
 function handleLikeIMG(postID){
 
@@ -130,8 +230,6 @@ function handleLikeIMG(postID){
         likeImageElement.addEventListener('click', likeButtonOnClick(postID))
 
         console.log('added event listener to img from post', postID)
-
-        fun1counter++;
     })
 }
 function likeButtonOnClick(postID){
