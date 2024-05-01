@@ -1,12 +1,45 @@
 let counter = 0;
 const quantity = 10;
 
-document.addEventListener('DOMContentLoaded', load)
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#post-button').addEventListener('click', submit_post)
+
+    document.querySelector('#post-button').addEventListener('click', submitPost)
+    document.querySelector("#user-profile").addEventListener('click', loadUserProfile(2))
+    document.querySelector("#all-posts").addEventListener('click', loadIndex)
 
     console.log('hash:', window.location.hash)
+
+    // by deafult, load index page (all posts)
+    loadIndex();
 })
+
+function loadIndex(){
+    console.log('loadIndex')
+    counter = 0;
+    document.querySelector('#profile').style.display = 'none'
+    document.querySelector('#create-post').style.display = 'grid'
+    document.querySelector('#posts').style.display = 'block'
+
+    document.querySelector('#posts').innerHTML = ''
+
+    load();
+    event.preventDefault();
+}
+
+function loadUserProfile(UserID){
+    return function () {
+        console.log('loadUserProfile')
+        counter = 0;
+        document.querySelector('#profile').style.display = 'block'
+        document.querySelector('#create-post').style.display = 'none'
+        document.querySelector('#posts').style.display = 'block'
+
+        document.querySelector('#posts').innerHTML = ''
+
+        loadUserPosts(UserID)()
+
+    }
+}
 
 window.onscroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
@@ -18,7 +51,8 @@ let loading = false;
 
 function load(){
      if(!loading){
-         loading=true
+
+        loading=true
         const start = counter;
         const end = counter + quantity - 1;
         counter = end + 1;
@@ -27,7 +61,7 @@ function load(){
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                data.forEach(add_post)
+                data.forEach(addPost)
                 loading = false;
             })
             .catch(error => {
@@ -37,7 +71,31 @@ function load(){
     }
 }
 
-function add_post(object){
+function loadUserPosts(userID){
+    return function (){
+        if(!loading){
+
+            loading=true
+            const start = counter;
+            const end = counter + quantity - 1;
+            counter = end + 1;
+
+            fetch(`/profile/${userID}/posts?start=${start}&end=${end}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    data.forEach(addPost)
+                    loading = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    loading = false;
+                })
+        }
+    }
+}
+
+function addPost(object){
     const post = document.createElement('div')
     post.className = 'post'
 
@@ -59,7 +117,7 @@ function add_post(object){
     // dodać odnośnik do profilu autora, zaradź coś na niezalogowanego użytkownika
 }
 
-function submit_post(event){
+function submitPost(event){
     const postBody = document.querySelector('#post-textarea').value
 
     if (postBody !== ''){
