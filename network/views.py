@@ -131,7 +131,7 @@ def profile(request, user_id):
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
+            return JsonResponse({'error': 'User not found'}, status=400)
 
         return JsonResponse({'user_data': user.profile_data()})
 
@@ -144,7 +144,7 @@ def user_posts(request, user_id):
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
+        return JsonResponse({'error': 'User not found'}, status=400)
 
     # duplicate, but no idea how to implement it differently
     start = int(request.GET.get("start") or 0)

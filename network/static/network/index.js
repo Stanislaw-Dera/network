@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('hash:', window.location.hash)
 
-    // by deafult, load index page (all posts)
+    // by default, load index page (all posts)
     loadIndex();
 })
 
@@ -23,29 +23,56 @@ function loadIndex(){
     document.querySelector('#posts').innerHTML = ''
 
     load();
-    event.preventDefault();
+    // event.preventDefault();
+
+    window.onscroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            load();
+        }
+    };
 }
 
-function loadUserProfile(UserID){
+function loadUserProfile(userID){
     return function () {
-        console.log('loadUserProfile')
-        counter = 0;
-        document.querySelector('#profile').style.display = 'block'
-        document.querySelector('#create-post').style.display = 'none'
-        document.querySelector('#posts').style.display = 'block'
 
-        document.querySelector('#posts').innerHTML = ''
+        fetch(`profile/${userID}`)
+            .then(response => response.json())
+            .then(userData => {
+                userData = userData.user_data;
 
-        loadUserPosts(UserID)()
+                const profileElement = document.querySelector('#profile')
+                console.log(userData)
+                profileElement.innerHTML = `
+                <div id="profile-username">${userData.username}</div>
+                <div id="profile-followers">Followers: ${userData.followers_count}</div>
+                <div id="profile-following">Following: ${userData.following_count}</div>`
+            })
+            .then(() => {
+                console.log('loadUserProfile')
+                counter = 0;
+                document.querySelector('#profile').style.display = 'grid'
+                document.querySelector('#create-post').style.display = 'none'
+                document.querySelector('#posts').style.display = 'block'
+
+                document.querySelector('#posts').innerHTML = ''
+
+
+               loadUserPosts(userID)()
+                
+                window.onscroll = () => {
+                    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                        loadUserPosts(userID);
+                    }
+                };
+            })
+            .catch(error => {
+                console.log(error)
+                loadIndex()
+            })
+
 
     }
 }
-
-window.onscroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        load();
-    }
-};
 
 let loading = false;
 

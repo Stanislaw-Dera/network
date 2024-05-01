@@ -44,4 +44,19 @@
   margin-bottom: -10px;
 }
 
+#profile {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  width: 50%;
+  border: 5px lightgray outset;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+#profile #profile-username {
+  font-weight: bold;
+  font-size: x-large;
+}
+
 /*# sourceMappingURL=styles.css.map */
