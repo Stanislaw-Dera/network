@@ -6,6 +6,13 @@ class User(AbstractUser):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, blank=True, null=True)
     # to get all the posts, use u.post_set.all()
 
+    def profile_data(self):
+        return {
+            'username': self.username,
+            'followers_count': self.followers.count(),
+            'following_count': self.following.count()
+        }
+
 
 class Post(models.Model):
     body = models.TextField()

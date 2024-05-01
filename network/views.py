@@ -124,3 +124,39 @@ def like(request, post_id):
             return JsonResponse({'liked': True})
         else:
             return JsonResponse({'liked': False})
+
+
+def profile(request, user_id):
+    if request.method == 'GET':
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        return JsonResponse({'user_data': user.profile_data()})
+
+    elif request.method == 'POST':
+        pass
+        # follow/unfollow
+
+
+def user_posts(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    # duplicate, but no idea how to implement it differently
+    start = int(request.GET.get("start") or 0)
+    end = int(request.GET.get("end") or (start + 9))
+    data = []
+
+    for i in range(end - start + 1):
+        try:
+            data.append(user.post_set.order_by('-date')[i + start].serialize())
+        except IndexError:
+            time.sleep(1)
+            return JsonResponse(data, safe=False)
+
+    time.sleep(1)
+    return JsonResponse(data, safe=False)

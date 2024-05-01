@@ -4,6 +4,8 @@ const quantity = 10;
 document.addEventListener('DOMContentLoaded', load)
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#post-button').addEventListener('click', submit_post)
+
+    console.log('hash:', window.location.hash)
 })
 
 window.onscroll = () => {
@@ -13,7 +15,6 @@ window.onscroll = () => {
 };
 
 let loading = false;
-const addedListeners = new Set();
 
 function load(){
      if(!loading){
@@ -108,8 +109,21 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let fun1counter = 0;
-let fun2counter = 0;
+//auto-resize textarea (https://stackoverflow.com/questions/454202/creating-a-textarea-with-auto-resize)
+document.addEventListener('DOMContentLoaded', () =>{
+    const tx = document.getElementsByTagName("textarea");
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+      tx[i].addEventListener("input", OnInput, false);
+    }
+})
+
+function OnInput() {
+    this.style.resize = 'vertical';
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + "px";
+    this.style.resize = 'none';
+}
 
 function handleLikeIMG(postID){
 
@@ -130,8 +144,6 @@ function handleLikeIMG(postID){
         likeImageElement.addEventListener('click', likeButtonOnClick(postID))
 
         console.log('added event listener to img from post', postID)
-
-        fun1counter++;
     })
 }
 function likeButtonOnClick(postID){
