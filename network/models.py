@@ -24,6 +24,7 @@ class Post(models.Model):
         return {
             'id': self.id,
             'author': self.author.username,
+            'author_id': self.author.id,
             'body': self.body,
             'date': self.date.strftime("%a, %d %b %Y %H:%M"),
             'likes': self.likes.count()

@@ -128,7 +128,7 @@ function addPost(object){
     post.className = 'post'
 
     post.innerHTML = `
-        <div class="author" onclick="loadUserProfile(${object.id})()">By: ${object.author}</div> 
+        <div class="author" onclick="loadUserProfile(${object.author_id})()">By: ${object.author}</div> 
         <div class="body">${object.body}</div>
         <div class="footer-wrapper">
             <img id="post-like-img-${object.id}" src="../static/network/not_liked.svg" alt="like" class="like-image" height="30" width="30">
