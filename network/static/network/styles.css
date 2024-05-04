@@ -46,9 +46,9 @@
 
 #profile {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   align-items: center;
-  width: 50%;
+  width: 70%;
   border: 5px lightgray outset;
   padding: 20px;
   margin: 20px 0;
