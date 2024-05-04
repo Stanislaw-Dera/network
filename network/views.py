@@ -102,9 +102,11 @@ def post(request):
         return JsonResponse({"you post!": f'{post.body}'})
 
 
-@login_required(redirect_field_name=None)
 def get_current_user(request):
-    return JsonResponse({'current_user_id': request.user.id})
+    if request.user:
+        return JsonResponse({'current_user_id': request.user.id})
+    else:
+        return JsonResponse({'error': 'you are not logged in'}, status=401)
 
 
 @login_required(redirect_field_name=None)
@@ -135,10 +137,6 @@ def profile(request, user_id):
 
         return JsonResponse({'user_data': user.profile_data()})
 
-    elif request.method == 'POST':
-        pass
-        # follow/unfollow
-
 
 def user_posts(request, user_id):
     try:
@@ -160,3 +158,33 @@ def user_posts(request, user_id):
 
     time.sleep(1)
     return JsonResponse(data, safe=False)
+
+
+@login_required(redirect_field_name=None)
+def follow(request, user_id):
+    current_user = request.user
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=400)
+
+    if request.method == 'GET':
+
+        if user_id == current_user.id:
+            return JsonResponse({'following': "It's your profile!"}, status=200)
+        elif current_user in user.followers.all():
+            return JsonResponse({'following': True}, status=200)
+        else:
+            return JsonResponse({'following': False}, status=200)
+
+    elif request.method == 'POST':
+        if user_id == current_user.id:
+            return JsonResponse({'error': "you can't follow yourself"}, status=400)
+
+        elif current_user not in user.followers.all():
+            user.followers.add(current_user)
+            return JsonResponse({'following': True}, status=200)
+
+        else:
+            user.followers.remove(current_user)
+            return JsonResponse({'following': False}, status=200)

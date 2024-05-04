@@ -3,11 +3,10 @@
 {% block body %}
     <div id="profile">
     </div>
-    
-    {% if user.is_authenticated %}
+
     <form>
         <div id="create-post">
-            
+            {% if user.is_authenticated %}
             <div id="textarea-wrapper">
                 <textarea id="post-textarea" class="form-control" placeholder="What's going on?"></textarea>
             </div>
@@ -15,9 +14,10 @@
             <input id="post-button" type="image" src="../../static/network/send.svg" alt="submit" height="50px">
             
             <footer id="post-error-box"></footer>
+            {% endif %}
         </div>
     </form>
-    {% endif %}
+
     
     <div id="posts">
     </div>

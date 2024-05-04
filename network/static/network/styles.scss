@@ -53,9 +53,9 @@ $border: lightgray;
 
 #profile{
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   align-items: center;
-  width: 50%;
+  width: 70%;
 
   border: 5px $border outset;
   padding: 20px;
@@ -69,10 +69,12 @@ $border: lightgray;
   }
 
   #profile-followers{
-
   }
 
   #profile-following{
+  }
+
+  #profile-follow-button{
 
   }
 }
