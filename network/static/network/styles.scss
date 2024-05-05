@@ -21,7 +21,7 @@ $border: lightgray;
     grid-template-columns: auto auto 1fr;
   }
 }
-#create-post{
+#create-post-wrapper{
   display: grid;
   grid-template-columns: auto auto auto auto auto auto;
   align-items: center;

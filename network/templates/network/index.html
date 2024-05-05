@@ -4,9 +4,10 @@
     <div id="profile">
     </div>
 
-    <form>
-        <div id="create-post">
-            {% if user.is_authenticated %}
+    <form id="create-post">
+        {% if user.is_authenticated %}
+        <div id="create-post-wrapper">
+            
             <div id="textarea-wrapper">
                 <textarea id="post-textarea" class="form-control" placeholder="What's going on?"></textarea>
             </div>
@@ -14,8 +15,9 @@
             <input id="post-button" type="image" src="../../static/network/send.svg" alt="submit" height="50px">
             
             <footer id="post-error-box"></footer>
-            {% endif %}
+            
         </div>
+        {% endif %}
     </form>
 
     

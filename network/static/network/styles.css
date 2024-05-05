@@ -19,7 +19,7 @@
   grid-template-columns: auto auto 1fr;
 }
 
-#create-post {
+#create-post-wrapper {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto;
   align-items: center;
@@ -27,16 +27,16 @@
   padding: 20px;
   margin: 20px 0;
 }
-#create-post #textarea-wrapper {
+#create-post-wrapper #textarea-wrapper {
   grid-column: 2/span 4;
 }
-#create-post #post-textarea {
+#create-post-wrapper #post-textarea {
   resize: none;
 }
-#create-post #post-button {
+#create-post-wrapper #post-button {
   margin-left: 20px;
 }
-#create-post #post-error-box {
+#create-post-wrapper #post-error-box {
   grid-column: 2;
   font-size: x-small;
   color: darkred;

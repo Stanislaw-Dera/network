@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(error)
     })
 
-
     document.querySelector("#all-posts").addEventListener('click', loadIndex)
-
-    console.log('hash:', window.location.hash)
 
     // by default, load index page (all posts)
     loadIndex();
