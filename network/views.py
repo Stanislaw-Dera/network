@@ -161,6 +161,31 @@ def user_posts(request, user_id):
 
 
 @login_required(redirect_field_name=None)
+def following_posts(request):
+
+    # duplicate, but no idea how to implement it differently
+    start = int(request.GET.get("start") or 0)
+    end = int(request.GET.get("end") or (start + 9))
+    data = []
+    temp = []
+    following = request.user.following.all()
+    print(following)
+
+    posts = Post.objects.filter(author__in=following).order_by('-date')
+    print(posts)
+
+    for i in range(end - start + 1):
+        try:
+            data.append(posts[i+start].serialize())
+        except IndexError:
+            time.sleep(1)
+            return JsonResponse(data, safe=False)
+
+    time.sleep(1)
+    return JsonResponse(data, safe=False)
+
+
+@login_required(redirect_field_name=None)
 def follow(request, user_id):
     current_user = request.user
     try:

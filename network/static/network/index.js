@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
         document.querySelector('#post-button').addEventListener('click', submitPost)
         document.querySelector("#user-profile").addEventListener('click', loadUserProfile(data.current_user_id))
+        document.querySelector('#following').addEventListener('click', loadFollowing)
     }).catch(error => {
         console.log(error)
     })
@@ -33,6 +34,23 @@ function loadIndex(){
     window.onscroll = () => {
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
             load();
+        }
+    };
+}
+
+function loadFollowing(){
+    counter = 0;
+    document.querySelector('#profile').style.display = 'none'
+    document.querySelector('#create-post').style.display = 'none'
+    document.querySelector('#posts').style.display = 'block'
+
+    document.querySelector('#posts').innerHTML = '<h1>Following</h1>'
+
+    loadFollowingPosts();
+
+    window.onscroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            loadFollowingPosts();
         }
     };
 }
@@ -145,6 +163,23 @@ function loadUserPosts(userID){
                     loading = false;
                 })
         }
+    }
+}
+
+function loadFollowingPosts(){
+    if(!loading){
+        loading=true;
+        const start = counter;
+        const end = counter + quantity - 1;
+        counter = end + 1;
+
+        fetch(`/following?start=${start}&end=${end}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            data.forEach(addPost)
+            loading = false;
+        })
     }
 }
 
