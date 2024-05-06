@@ -2,6 +2,7 @@ import time
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -69,19 +70,18 @@ def register(request):
 
 
 def posts(request):
-    start = int(request.GET.get("start") or 0)
-    end = int(request.GET.get("end") or (start + 9))
-    data = []
 
-    for i in range(end-start+1):
-        try:
-            data.append(Post.objects.order_by('-date')[i+start].serialize())
-        except IndexError:
-            time.sleep(1)
-            return JsonResponse(data, safe=False)
+    p = Paginator(Post.objects.order_by('-date'), 10)
+    page_num = int(request.GET.get('page'))
+
+    print(page_num)
+    print('page: ', p.page(page_num).object_list)
+
+    post_list = [post.serialize() for post in p.page(page_num).object_list]
 
     time.sleep(1)
-    return JsonResponse(data, safe=False)
+
+    return JsonResponse(post_list, safe=False)
 
 
 @requires_csrf_token

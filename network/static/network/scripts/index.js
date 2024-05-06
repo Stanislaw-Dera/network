@@ -1,5 +1,5 @@
 import {submitPost} from "./post-handling.js";
-import {setCounter, load, loadUserPosts, loadFollowingPosts} from "./loadingPosts.js";
+import {setPageCounter, load, loadUserPosts, loadFollowingPosts} from "./loadingPosts.js";
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadIndex(){
     console.log('loadIndex')
-    setCounter(0);
+    setPageCounter(0);
     document.querySelector('#profile').style.display = 'none'
     document.querySelector('#create-post').style.display = 'grid'
     document.querySelector('#posts').style.display = 'block'
