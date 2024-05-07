@@ -1,11 +1,12 @@
 import {handleLikeIMG} from "./like-button-handling.js";
+import {loadUserProfile} from './index.js'
 
 export function addPost(object){
     const post = document.createElement('div')
     post.className = 'post'
 
     post.innerHTML = `
-        <div class="author" onclick="loadUserProfile(${object.author_id})()">By: ${object.author}</div> 
+        <div id="post-author-${object.id}" class="author">By: ${object.author}</div> 
         <div class="body">${object.body}</div>
         <div class="footer-wrapper">
             <img id="post-like-img-${object.id}" src="../static/network/not_liked.svg" alt="like" class="like-image" height="30" width="30">
@@ -15,6 +16,7 @@ export function addPost(object){
     `;
 
     document.querySelector('#posts').append(post)
+    document.querySelector(`#post-author-${object.id}`).addEventListener('click', loadUserProfile(object.author_id))
 
     //check whether post is already liked by this user, handle like img
     handleLikeIMG(object.id)

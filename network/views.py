@@ -2,7 +2,7 @@ import time
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger
 from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -74,14 +74,22 @@ def posts(request):
     p = Paginator(Post.objects.order_by('-date'), 10)
     page_num = int(request.GET.get('page'))
 
-    print(page_num)
-    print('page: ', p.page(page_num).object_list)
+    try:
+        page = p.page(page_num)
+    except PageNotAnInteger:
+        return JsonResponse({'error': 'invalid page'}, status=400)
 
-    post_list = [post.serialize() for post in p.page(page_num).object_list]
+    print('page: ', page.object_list)
+
+    post_list = [post.serialize() for post in page.object_list]
 
     time.sleep(1)
 
-    return JsonResponse(post_list, safe=False)
+    return JsonResponse({
+        'hasNext': page.has_next(),
+        'hasPrevious': page.has_previous(),
+        'posts': post_list
+    }, safe=False)
 
 
 @requires_csrf_token
@@ -144,45 +152,50 @@ def user_posts(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=400)
 
-    # duplicate, but no idea how to implement it differently
-    start = int(request.GET.get("start") or 0)
-    end = int(request.GET.get("end") or (start + 9))
-    data = []
+    p = Paginator(user.post_set.order_by('-date').order_by('-date'), 10)
+    page_num = int(request.GET.get('page'))
 
-    for i in range(end - start + 1):
-        try:
-            data.append(user.post_set.order_by('-date')[i + start].serialize())
-        except IndexError:
-            time.sleep(1)
-            return JsonResponse(data, safe=False)
+    try:
+        page = p.page(page_num)
+    except PageNotAnInteger:
+        return JsonResponse({'error': 'invalid page'}, status=400)
+
+    print('page: ', page.object_list)
+
+    post_list = [post.serialize() for post in page.object_list]
 
     time.sleep(1)
-    return JsonResponse(data, safe=False)
+
+    return JsonResponse({
+        'hasNext': page.has_next(),
+        'hasPrevious': page.has_previous(),
+        'posts': post_list
+    }, safe=False)
 
 
 @login_required(redirect_field_name=None)
 def following_posts(request):
-
-    # duplicate, but no idea how to implement it differently
-    start = int(request.GET.get("start") or 0)
-    end = int(request.GET.get("end") or (start + 9))
-    data = []
-    temp = []
     following = request.user.following.all()
-    print(following)
 
-    posts = Post.objects.filter(author__in=following).order_by('-date')
-    print(posts)
+    p = Paginator(Post.objects.filter(author__in=following).order_by('-date'), 10)
+    page_num = int(request.GET.get('page'))
 
-    for i in range(end - start + 1):
-        try:
-            data.append(posts[i+start].serialize())
-        except IndexError:
-            time.sleep(1)
-            return JsonResponse(data, safe=False)
+    try:
+        page = p.page(page_num)
+    except PageNotAnInteger:
+        return JsonResponse({'error': 'invalid page'}, status=400)
+
+    print('page: ', page.object_list)
+
+    post_list = [post.serialize() for post in page.object_list]
 
     time.sleep(1)
-    return JsonResponse(data, safe=False)
+
+    return JsonResponse({
+        'hasNext': page.has_next(),
+        'hasPrevious': page.has_previous(),
+        'posts': post_list
+    }, safe=False)
 
 
 @login_required(redirect_field_name=None)

@@ -1,5 +1,7 @@
 import {submitPost} from "./post-handling.js";
-import {setPageCounter, load, loadUserPosts, loadFollowingPosts} from "./loadingPosts.js";
+import {setPageCounter, loadPosts, loadUserPosts, loadFollowingPosts} from "./loadingPosts.js";
+
+//export {loadUserProfile}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -21,25 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadIndex(){
     console.log('loadIndex')
-    setPageCounter(0);
+    setPageCounter(1);
     document.querySelector('#profile').style.display = 'none'
     document.querySelector('#create-post').style.display = 'grid'
     document.querySelector('#posts').style.display = 'block'
 
     document.querySelector('#posts').innerHTML = ''
 
-    load();
-    // event.preventDefault();
-
-    window.onscroll = () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-            load();
-        }
-    };
+    loadPosts();
 }
 
 function loadFollowing(){
-    setCounter(0);
+    setPageCounter(1);
     document.querySelector('#profile').style.display = 'none'
     document.querySelector('#create-post').style.display = 'none'
     document.querySelector('#posts').style.display = 'block'
@@ -47,15 +42,9 @@ function loadFollowing(){
     document.querySelector('#posts').innerHTML = '<h1>Following</h1>'
 
     loadFollowingPosts();
-
-    window.onscroll = () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-            loadFollowingPosts();
-        }
-    };
 }
 
-function loadUserProfile(userID){
+export function loadUserProfile(userID){
     return function () {
 
         fetch(`profile/${userID}`)
@@ -74,7 +63,7 @@ function loadUserProfile(userID){
             })
             .then(() => {
                 console.log('loadUserProfile')
-                setCounter(0);
+                setPageCounter(1);
                 document.querySelector('#profile').style.display = 'grid'
                 document.querySelector('#create-post').style.display = 'none'
                 document.querySelector('#posts').style.display = 'block'
@@ -148,7 +137,7 @@ function follow (userID){
 }
 
 //django's function
-function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');

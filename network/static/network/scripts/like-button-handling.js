@@ -1,3 +1,4 @@
+import {getCookie} from './index.js'
 export function handleLikeIMG(postID){
 
     fetch(`posts/${postID}/like`)
