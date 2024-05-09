@@ -226,3 +226,18 @@ def follow(request, user_id):
         else:
             user.followers.remove(current_user)
             return JsonResponse({'following': False}, status=200)
+
+
+def edit_post(request, post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+
+        if post.author != request.user:
+            return JsonResponse({'error': 'You can only edit your posts'}, status=400)
+
+        new_body = request.POST.get('body')
+
+        post.body = new_body
+        post.save()
+
+        return JsonResponse({'success': 'post edited successfully.'}, status=200)

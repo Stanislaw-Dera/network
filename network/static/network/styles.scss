@@ -11,6 +11,12 @@ $border: lightgray;
     text-decoration: none;
     color: gray;
     font-size: small;
+    display: inline-block;
+  }
+  .edit{
+    display: inline-block;
+    text-align: right;
+    float: right;
   }
   .date {
     text-align: right;
@@ -77,4 +83,11 @@ $border: lightgray;
   #profile-follow-button{
 
   }
+}
+
+.edit-textarea{
+  width: 80%;
+  resize: none;
+  overflow-y: hidden;
+  margin: 10px
 }

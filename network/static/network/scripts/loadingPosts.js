@@ -16,6 +16,8 @@ function postsAndPagination(object){
 
     posts.forEach(addPost)
 
+
+
     const hasNext = object.hasNext
     const hasPrevious = object.hasPrevious
 

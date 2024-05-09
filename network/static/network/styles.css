@@ -9,6 +9,12 @@
   text-decoration: none;
   color: gray;
   font-size: small;
+  display: inline-block;
+}
+.post .edit {
+  display: inline-block;
+  text-align: right;
+  float: right;
 }
 .post .date {
   text-align: right;
@@ -57,6 +63,12 @@
 #profile #profile-username {
   font-weight: bold;
   font-size: x-large;
+}
+.edit-textarea {
+  width: 80%;
+  resize: none;
+  overflow-y: hidden;
+  margin: 10px;
 }
 
 /*# sourceMappingURL=styles.css.map */

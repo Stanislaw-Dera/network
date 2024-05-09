@@ -1,8 +1,6 @@
 import {submitPost} from "./post-handling.js";
 import {setPageCounter, loadPosts, loadUserPosts, loadFollowingPosts} from "./loadingPosts.js";
 
-//export {loadUserProfile}
-
 document.addEventListener('DOMContentLoaded', () => {
 
     fetch('/get_current_user')
@@ -162,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 })
 
-function OnInput() {
+export function OnInput() {
     this.style.resize = 'vertical';
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight) + "px";
