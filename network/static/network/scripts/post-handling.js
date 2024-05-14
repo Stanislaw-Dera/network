@@ -103,8 +103,9 @@ function editPost(postID, body){
     })
     .then(response => response.json())
     .then(data => {
-        formData.forEach(foo => {console.log('data submited:', foo)})
-
+        console.log(data)
+        const bodyElement = document.querySelector(`#post-author-${postID}`).parentNode.parentNode.querySelector('.body')
+        bodyElement.innerHTML = body;
     })
     .catch(error => {
         console.error('Error:', error);
