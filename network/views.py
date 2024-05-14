@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_protect, requires_csrf_token
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf_exempt
 
 from .models import User, Post
 
@@ -228,16 +228,23 @@ def follow(request, user_id):
             return JsonResponse({'following': False}, status=200)
 
 
+@login_required()
 def edit_post(request, post_id):
     if request.method == 'POST':
+        print('request.POST: ', request.POST)
+
         post = Post.objects.get(id=post_id)
 
         if post.author != request.user:
             return JsonResponse({'error': 'You can only edit your posts'}, status=400)
 
-        new_body = request.POST.get('body')
+        new_body = request.POST.get("body")
+
+        print(new_body)
 
         post.body = new_body
         post.save()
 
         return JsonResponse({'success': 'post edited successfully.'}, status=200)
+    else:
+        return JsonResponse({'error': 'POST request needed.'}, status=400)

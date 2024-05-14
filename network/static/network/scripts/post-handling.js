@@ -27,6 +27,7 @@ export function addPost(object){
             if(data.current_user_id === object.author_id){
                 const editField = document.querySelector(`#edit-post-${object.id}`)
                 editField.innerHTML = 'edit'
+
                 editField.addEventListener('click', () => {
                     const textarea = document.createElement('textarea')
                     textarea.innerHTML = object.body;
@@ -43,10 +44,13 @@ export function addPost(object){
                     bodyField.appendChild(textarea)
                     bodyField.append(submitDiv)
 
-                    //submitDiv.addEventListener('click', editPost(object.id, textarea.value))
+                    console.log(textarea.value)
+
                     submitDiv.addEventListener('click', () => {
-                        console.log('success!')
-                    })
+                        const updatedBody = textarea.value;
+                        console.log('up:', updatedBody)
+                        editPost(object.id, updatedBody);
+                    });
                 })
             }
         })
@@ -87,15 +91,23 @@ export function submitPost(event){
 }
 
 function editPost(postID, body){
-    fetch(`posts/${postID}/edit`, {
+    const formData = new FormData();
+    formData.append('body', body);
+
+    fetch(`/posts/${postID}/edit`, {
         method: 'POST',
-        headers: {'X-CSRFToken': getCookie('csrftoken')},
-        body: {
-            'body': body
-        }
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'), // Add CSRF token header
+        },
+        body: formData
     })
-        .then(response => response.json())
-        .then(data =>{
-            console.log(data)
-        })
+    .then(response => response.json())
+    .then(data => {
+        formData.forEach(foo => {console.log('data submited:', foo)})
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
 }

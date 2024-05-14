@@ -6,18 +6,10 @@ export function handleLikeIMG(postID){
     .then(isLiked => {
         const likeIMG = isLiked.liked ? 'liked.svg' : 'not_liked.svg';
 
-        console.log('likeIMG:', likeIMG)
-
         const likeImageElement = document.querySelector(`#post-like-img-${postID}`);
         likeImageElement.src = `../static/network/${likeIMG}`;
 
-        console.log('adding event listener to img from post', postID)
-
-        // likeImageElement.removeEventListener('click', likeButtonOnClick)
-
         likeImageElement.addEventListener('click', likeButtonOnClick(postID))
-
-        console.log('added event listener to img from post', postID)
     })
 }
 export function likeButtonOnClick(postID){
